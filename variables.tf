@@ -6,15 +6,15 @@ default = "eu-west-1"
 }
 
 variable "nodejs_app" {
-default = "ami-0651ff04b9b983c9f"
+default = "ami-04337085e29a3125f"
 }
 
 #variable "db_ami" {
-# default = "ami-05399c20723d2acbd"
+# default = "ami-0ce081d2daeaa8021"
 #}
 
 variable "ssh_key" {
-default = "eng74.filipe.aws.key"
+default = "eng74-jamie-aws-key"
 }
 
 variable "inst_type" {
@@ -23,5 +23,5 @@ default = "t2.micro"
 
 
 variable "eng_class_person" {
-  default = "eng74_filipe_"
+  default = "eng74-jamie-fp-"
 }

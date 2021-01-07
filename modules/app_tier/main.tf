@@ -2,7 +2,7 @@
 # Create a public subnet
 resource "aws_subnet" "subnet-public" {
   vpc_id     = var.vpc-terraform-name-id
-  cidr_block = "12.0.1.0/24"
+  cidr_block = "16.1.1.0/24"
   # map_public_ip_on_launch = true
 
   tags = {
@@ -12,7 +12,7 @@ resource "aws_subnet" "subnet-public" {
 
 # Create a SG
 resource "aws_security_group" "sg_app" {
-  name        = "public_sg_for_app_Filipe"
+  name        = "public_sg_for_app_jamie"
   description = "allows traffic to app"
   vpc_id      = var.vpc-terraform-name-id
 
@@ -29,7 +29,7 @@ resource "aws_security_group" "sg_app" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["85.240.168.69/32"]
+    cidr_blocks = ["82.25.225.127/32"]
   }
 
   ingress {
@@ -45,7 +45,7 @@ resource "aws_security_group" "sg_app" {
     from_port   = 3000
     to_port     = 3000
     protocol    = "tcp"
-    cidr_blocks = ["85.240.168.69/32"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -132,7 +132,7 @@ resource "aws_instance" "nodejs_instance" {
   security_groups = [aws_security_group.sg_app.id]
 
   tags = {
-  Name = "Filipe_eng74_webapp_terraform"
+  Name = "eng74-jamie-fp-webapp-terraform"
   }
   key_name = var.ssh_key
 }

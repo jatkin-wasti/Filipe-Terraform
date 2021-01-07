@@ -8,7 +8,7 @@ variable "eng_class_person" {
 }
 
 variable "gw_id" {
-  description = "gatway id"
+  description = "aws_internet_gateway id"
 }
 
 variable "nodejs_app" {}

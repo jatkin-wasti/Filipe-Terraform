@@ -13,7 +13,7 @@ provider "aws" {
 
 # Create a VPC
 resource "aws_vpc" "vpc-terraform-name" {
-  cidr_block       = "12.0.0.0/16"
+  cidr_block       = "16.1.0.0/16"
   instance_tenancy = "default"
 
   tags = {
@@ -42,6 +42,32 @@ module "app" {
   gw_id = aws_internet_gateway.gw.id
   nodejs_app = var.nodejs_app
   ssh_key = var.ssh_key
+}
+
+# using the sg_app_id to make a db security group
+resource "aws_security_group" "sg_db" {
+    name = "db_sg_for_app_jamie"
+    description = "allow interaction with app"
+    vpc_id = aws_vpc.vpc-terraform-name.id
+
+    ingress {
+      description = "HTTPS from anywhere"
+      from_port   = 27017
+      to_port     = 27017
+      protocol    = "tcp"
+      security_groups = [module.app.sg_app_id] # how to get output from a module
+    }
+
+    egress {
+      description = "allow out everything"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+    tags = {
+    Name = "${var.eng_class_person}sg_db_terraform"
+    }
 }
 
 
