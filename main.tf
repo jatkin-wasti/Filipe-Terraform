@@ -41,6 +41,8 @@ module "app" {
   eng_class_person = var.eng_class_person
   gw_id = aws_internet_gateway.gw.id
   nodejs_app = var.nodejs_app
+  db_ami = var.db_ami
+  sg_db = aws_security_group.sg_db.id
   ssh_key = var.ssh_key
 }
 

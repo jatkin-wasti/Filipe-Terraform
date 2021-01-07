@@ -14,3 +14,7 @@ variable "gw_id" {
 variable "nodejs_app" {}
 
 variable "ssh_key" {}
+
+variable "sg_db" {}
+
+variable "db_ami" {}

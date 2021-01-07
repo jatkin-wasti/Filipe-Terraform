@@ -10,6 +10,17 @@ resource "aws_subnet" "subnet-public" {
   }
 }
 
+# Create a private subnet
+resource "aws_subnet" "subnet-private" {
+  vpc_id     = var.vpc-terraform-name-id
+  cidr_block = "16.1.2.0/24"
+  # map_public_ip_on_launch = true
+
+  tags = {
+    Name = "${var.eng_class_person}subnet_private_terraform"
+  }
+}
+
 # Create a SG
 resource "aws_security_group" "sg_app" {
   name        = "public_sg_for_app_jamie"
@@ -97,6 +108,60 @@ resource "aws_network_acl" "public_nacl" {
   }
 }
 
+resource "aws_network_acl" "private_nacl" {
+      vpc_id      = var.vpc-terraform-name-id
+      subnet_ids = [aws_subnet.subnet-private.id]
+
+      ingress {
+          protocol = "tcp"
+          rule_no = 100
+          action = "allow"
+          cidr_block = "16.1.1.0/24"
+          from_port = 27017
+          to_port = 27017
+      }
+
+      ingress {
+          protocol = "tcp"
+          rule_no = 110
+          action = "allow"
+          cidr_block = "82.25.225.127/32"
+          from_port = 22
+          to_port = 22
+      }
+
+      egress {
+          protocol = "tcp"
+          rule_no = 100
+          action = "allow"
+          cidr_block = "16.1.1.0/24"
+          from_port = 80
+          to_port = 80
+      }
+
+      egress {
+          protocol = "tcp"
+          rule_no = 110
+          action = "allow"
+          cidr_block = "16.1.1.0/24"
+          from_port = 443
+          to_port = 443
+      }
+
+      egress {
+          protocol = "tcp"
+          rule_no = 120
+          action = "allow"
+          cidr_block = "16.1.1.0/24"
+          from_port = 1024
+          to_port = 65535
+      }
+
+      tags = {
+          Name = "eng74-jamie-terraform-nacl-private"
+      }
+}
+
 
 # ROUTES
 resource "aws_route_table" "route_public_table"{
@@ -133,6 +198,24 @@ resource "aws_instance" "nodejs_instance" {
 
   tags = {
   Name = "eng74-jamie-fp-webapp-terraform"
+  }
+  key_name = var.ssh_key
+}
+
+#Instance EC2
+resource "aws_instance" "db_instance" {
+  ami = var.db_ami
+  instance_type = "t2.micro"
+  associate_public_ip_address = true
+
+  # placing instance in correct subnet
+  subnet_id = aws_subnet.subnet-private.id
+
+  # Attaching correct SG
+  security_groups = [var.sg_db]
+
+  tags = {
+  Name = "eng74-jamie-fp-db-terraform"
   }
   key_name = var.ssh_key
 }
